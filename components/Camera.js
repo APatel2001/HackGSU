@@ -2,9 +2,39 @@
 import React, { PureComponent } from 'react';
 import { AppRegistry, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RNCamera } from 'react-native-camera';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import ImagePicker from "react-native-image-picker"
 
 class Camera extends PureComponent {
+    
+    options = {
+        title: 'Select Picture',
+        customButtons: [{ name: 'Image', title: 'Pick an image:' }],
+        storageOptions: {
+          skipBackup: true,
+          path: 'images',
+        },
+    };
+    
+    pickImage = () => {
+        ImagePicker.launchImageLibrary(this.options, (response) => {
+          if (response.didCancel) {
+            console.log('User cancelled image picker');
+          } else if (response.error) {
+            console.log('ImagePicker Error: ', response.error);
+          } else if (response.customButton) {
+            console.log('User tapped custom button: ', response.customButton);
+          }
+            }
+        )
+    }
+
+    state = {
+        flash: false,
+    }
+
+
+    
   render() {
     return (
       <View style={styles.container}>
@@ -14,7 +44,7 @@ class Camera extends PureComponent {
           }}
           style={styles.preview}
           type={RNCamera.Constants.Type.back}
-          flashMode={RNCamera.Constants.FlashMode.on}
+          flashMode={this.state.flash ? RNCamera.Constants.FlashMode.on : RNCamera.Constants.FlashMode.off}
           androidCameraPermissionOptions={{
             title: 'Permission to use camera',
             message: 'We need your permission to use your camera',
@@ -23,17 +53,43 @@ class Camera extends PureComponent {
           }}
 
         />
-        <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center',}}>
+        <View style={{ flexDirection: 'row', justifyContent: "space-evenly" }}>
+
+            <Icon.Button
+                name="image"
+                backgroundColor = ""
+                onPress={this.pickImage.bind(this)}
+                size={40}
+            >
+            </Icon.Button>
+          
             <Icon.Button
                 name="camera"
                 backgroundColor=""
                 onPress={this.takePicture.bind(this)}
-                size={30}
+                size={40}
             > 
             </Icon.Button>
+            
+            
+            <Icon.Button
+                name={this.state.flash ? "flash" : "flash-off"}
+                backgroundColor = ""
+                onPress={this.checkFlash.bind(this)}
+                size={40}
+            >
+            </Icon.Button>
+
+            
         </View>
       </View>
     );
+  }
+
+  checkFlash = () => {
+    this.setState(prevState => {
+        return {flash: !prevState.flash}
+    })
   }
 
   takePicture = async () => {
