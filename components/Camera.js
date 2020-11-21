@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react';
 import { AppRegistry, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RNCamera } from 'react-native-camera';
-import {} from 'react-native-vector-icons'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 class Camera extends PureComponent {
   render() {
@@ -21,20 +21,16 @@ class Camera extends PureComponent {
             buttonPositive: 'Ok',
             buttonNegative: 'Cancel',
           }}
-          androidRecordAudioPermissionOptions={{
-            title: 'Permission to use audio recording',
-            message: 'We need your permission to use your audio',
-            buttonPositive: 'Ok',
-            buttonNegative: 'Cancel',
-          }}
-          onGoogleVisionBarcodesDetected={({ barcodes }) => {
-            console.log(barcodes);
-          }}
+
         />
-        <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
-          <TouchableOpacity onPress={this.takePicture.bind(this)} style={styles.capture}>
-            <Text style={{ fontSize: 14, width: 20, height: 20, borderRadius: 10}}> Pic </Text>
-          </TouchableOpacity>
+        <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center',}}>
+            <Icon.Button
+                name="camera"
+                backgroundColor=""
+                onPress={this.takePicture.bind(this)}
+                size={30}
+            > 
+            </Icon.Button>
         </View>
       </View>
     );
