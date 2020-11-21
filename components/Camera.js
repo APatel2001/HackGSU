@@ -73,7 +73,7 @@ class Camera extends PureComponent {
             
             
             <Icon.Button
-                name={this.state.flash ? "flash" : "flash-off"}
+                name={this.state.flash ? "flash-on" : "flash-off"}
                 backgroundColor = ""
                 onPress={this.checkFlash.bind(this)}
                 size={40}
