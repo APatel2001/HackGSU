@@ -1,4 +1,3 @@
-'use strict';
 import React, { PureComponent } from 'react';
 import { AppRegistry, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RNCamera } from 'react-native-camera';
@@ -33,7 +32,7 @@ class Camera extends PureComponent {
             console.log('User tapped custom button: ', response.customButton);
           } else {
             console.log(response.data)
-            // this.pictureHandler(response)
+            this.pictureHandler(response.data)
           }
             }
         )
@@ -107,7 +106,7 @@ class Camera extends PureComponent {
       const options = { quality: 0.5, base64: true };
       const data = await this.camera.takePictureAsync(options);
       console.log(data.base64);
-    //   this.pictureHandler(data)
+      this.pictureHandler(data.base64)
 
     }
   };
