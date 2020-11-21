@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   AppRegistry,
   View,
@@ -12,11 +12,16 @@ import Camera from "./components/Camera";
 
 const App = () => {
 
+  const [picture, setPicture] = useState();
+
+  const pictureHandler = (image) => {
+    setPicture(() => {picture = image})
+  }
   
   return (
     <View style={style.container}>
       
-      <Camera></Camera>
+      <Camera passed={pictureHandler}></Camera>
 
       
     </View>

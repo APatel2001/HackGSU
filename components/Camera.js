@@ -7,6 +7,11 @@ import ImagePicker from "react-native-image-picker"
 
 class Camera extends PureComponent {
     
+    pictureHandler = () => {
+        this.props.passed();
+    }
+
+
     options = {
         title: 'Select Picture',
         customButtons: [{ name: 'Image', title: 'Pick an image:' }],
@@ -14,6 +19,8 @@ class Camera extends PureComponent {
           skipBackup: true,
           path: 'images',
         },
+        quality: 0.5,
+        base64: true
     };
     
     pickImage = () => {
@@ -24,6 +31,9 @@ class Camera extends PureComponent {
             console.log('ImagePicker Error: ', response.error);
           } else if (response.customButton) {
             console.log('User tapped custom button: ', response.customButton);
+          } else {
+            console.log(response.data)
+            // this.pictureHandler(response)
           }
             }
         )
@@ -96,7 +106,9 @@ class Camera extends PureComponent {
     if (this.camera) {
       const options = { quality: 0.5, base64: true };
       const data = await this.camera.takePictureAsync(options);
-      console.log(data.uri);
+      console.log(data.base64);
+    //   this.pictureHandler(data)
+
     }
   };
 }
