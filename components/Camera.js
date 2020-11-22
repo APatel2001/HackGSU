@@ -50,9 +50,16 @@ class Camera extends PureComponent {
         firstModal: false,
         secondModal: false,
         thirdModal: false,
+        recyclable: false,
+        object: {
+          firstData: false,
+        }
       }
-
       
+      this.checkerFunction.bind(this)
+      this.firstModalFunction.bind(this)
+      this.secondModalFunction.bind(this)
+      this.thirdModalFunction.bind(this)
     }
 
     // TODO Modal main function
@@ -66,9 +73,6 @@ class Camera extends PureComponent {
       })
     }
 
-    
-
-
     secondModalFunction = () => {
       this.setState((prevState) => {
         return {
@@ -76,9 +80,8 @@ class Camera extends PureComponent {
           secondModal: !prevState.secondModal
         }
       })
-      console.log(this.state.secondModal)
     }
-
+    
 
     thirdModalFunction = () => {
       this.setState((prevState) => {
@@ -88,22 +91,24 @@ class Camera extends PureComponent {
         }
       })
     }
+    
 
-    okOneFunction = () => {
-      this.firstModalFunction.bind(this)
-      this.secondModalFunction()
-      console.log(this.state.secondModal)
+    checkerFunction = (key) => {
+      if (key in this.state.object) {
+        const bool = this.state.object[key]
+        this.setState((prevState) => {
+          return {
+            ...prevState,
+            recyclable: bool
+          }
+        })
+        this.firstModalFunction()
+
+        
+      } else {
+        this.secondModalFunction();
+      }
     }
-
-    okTwoFunction = () => {
-      this.secondModalFunction.bind(this)
-      this.thirdModalFunction()
-    }
-
-    okThreeFunction = () => {
-      this.thirdModalFunction.bind(this)
-    }
-
 
 
     
@@ -136,6 +141,8 @@ class Camera extends PureComponent {
                 console.log(result);
                 this.firstModalFunction();
                 this.setState({ status: result });
+                this.checkerFunction(this.state.status)
+
               } catch (error) {
                 this.setState({ status: "Failed" })
               }
@@ -157,7 +164,7 @@ class Camera extends PureComponent {
             <Text style={styles.textModal}>{this.state.status + " " + "is recyclable"}</Text>
             <Image source={require('../images/vector.png')} style={{width: 100, height: 100}} resizeMode="contain"/>
             <View style={{alignItems: "stretch"}}>
-              <Button color="#20d623" style={styles.modalButton} title="OK" onPress={this.okOneFunction} />
+              <Button color="#20d623" style={styles.modalButton} title="OK" onPress={this.firstModalFunction} />
             </View>
           </View>
         </Modal>
@@ -166,25 +173,60 @@ class Camera extends PureComponent {
 
         <Modal visible={this.state.secondModal}>
           <View style={styles.modalView}>
-            <Text style={styles.textModal}>{this.state.status + " " + "is recyclable"}</Text>
+            <Text style={styles.textModal}>{this.state.status + " is not in dataset"}</Text>      
             <Image source={require('../images/vector.png')} style={{width: 100, height: 100}} resizeMode="contain"/>
-            <View style={{alignItems: "stretch"}}>
-              <Button color="#20d623" style={styles.modalButton} title="OK" onPress={this.okTwoFunction} />
+            <Text>Would you like to enter the data?</Text>
+            <View style={{flexDirection: "row", justifyContent: "center", alignItems: "stretch"}}>
+              <Button color="#20d623" style={styles.modalButton} title="YES" onPress={() => {
+                this.setState((prevState) => {
+                  return {
+                    ...prevState,
+                    secondModal: false,
+                    thirdModal: true
+                  }
+                })
+              }} />
+              <Button color="#20d623" style={styles.modalButton} title="NO" onPress={this.secondModalFunction} />
             </View>
           </View>
         </Modal>
 
 
 
-        <Modal visible={this.state.firstModal}>
+        <Modal visible={this.state.thirdModal}>
           <View style={styles.modalView}>
-            <Text style={styles.textModal}>{this.state.status + " " + "is recyclable"}</Text>
+            <Text style={styles.textModal}>{"Is " + this.state.status + " recyclable?"}</Text>
             <Image source={require('../images/vector.png')} style={{width: 100, height: 100}} resizeMode="contain"/>
-            <View style={{alignItems: "stretch"}}>
-              <Button color="#20d623" style={styles.modalButton} title="OK" onPress={this.firstModalFunction.bind(this)} />
+            <View style={{flexDirection: "row", justifyContent: "center", alignItems: "stretch"}}>
+              <Button color="#20d623" style={styles.modalButton} title="YES" onPress={() => {
+                const stateOne = this.state.status
+                this.setState((prevState) => {
+                  return {
+                    ...prevState,
+                    thirdModal: false,
+                    object: {
+                      ...prevState.object,
+                      [stateOne] : true
+                    }
+                  }
+                })
+              }} />
+              <Button color="#20d623" style={styles.modalButton} title="NO" onPress={() => {
+                const stateOne = this.state.status
+                this.setState((prevState) => {
+                  return {
+                    ...prevState,
+                    thirdModal: false,
+                    object: {
+                      ...prevState.object,
+                      [stateOne] : false
+                    }
+                  }
+                })
+              }} />
             </View>
-          </View>
-        </Modal>
+            </View>
+        </Modal> 
 
 
         <RNCamera
@@ -252,7 +294,8 @@ class Camera extends PureComponent {
         const result = await callGoogleVisionAsync(data.base64);
         console.log(result);
         this.setState({ status: result });
-        this.firstModalFunction();
+        // this.firstModalFunction();
+        this.checkerFunction(this.state.status)
       } catch (error) {
         this.setState({ status: "Failed" })
       }
