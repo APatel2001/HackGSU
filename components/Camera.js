@@ -61,8 +61,9 @@ class Camera extends PureComponent {
     };
     
     // TODO pickImage
-    pickImage = () => {
-        ImagePicker.launchImageLibrary(this.options, (response) => {
+    pickImage = async () => {
+        image = null;
+        ImagePicker.launchImageLibrary(this.options, async (response) => {
           if (response.didCancel) {
             console.log('User cancelled image picker');
           } else if (response.error) {
@@ -70,11 +71,20 @@ class Camera extends PureComponent {
           } else if (response.customButton) {
             console.log('User tapped custom button: ', response.customButton);
           } else {
-            // console.log(response.data)
-            //this.props.passed(response.uri)
+            if (image == null) {
+              image = await response.data
+              try {
+                const result = await callGoogleVisionAsync(image);
+                console.log(result);
+                this.setState({ status: result });
+              } catch (error) {
+                this.setState({ status: "Failed" })
+              }
+            }
           }
             }
         )
+
     }
     
   render() {
