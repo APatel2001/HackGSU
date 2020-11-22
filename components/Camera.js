@@ -115,14 +115,17 @@ class Camera extends PureComponent {
 
         <Modal visible={this.state.firstModal}>
           <View style={styles.modalView}>
-            <Text>{this.state.status + " " + "is recyclable"}</Text>
+            <Text style={styles.textModal}>{this.state.status + " " + "is recyclable"}</Text>
             <Icon
-              name="recycle"
+              name="flash-on"
               backgroundColor="rgba(52, 52, 52, 0.0)"
-              size={40}
+              size={80}
             >
             </Icon>
-            <Button title="Hide modal" onPress={this.firstModalFunction.bind(this)} />
+            <View style={{alignItems: "stretch"}}>
+              <Button color="#20d623" style={styles.modalButton} title="OK" onPress={this.firstModalFunction.bind(this)} />
+
+            </View>
           </View>
         </Modal>
 
@@ -233,11 +236,11 @@ const styles = StyleSheet.create({
   },
 
   modalButton: {
-    fontSize: 35,
+    alignSelf: "stretch"
   },
 
   textModal: {
-    fontSize: 35,
+    fontSize: 15,
     marginTop: 20
   }
 });
