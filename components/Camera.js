@@ -116,12 +116,8 @@ class Camera extends PureComponent {
         <Modal visible={this.state.firstModal}>
           <View style={styles.modalView}>
             <Text style={styles.textModal}>{this.state.status + " " + "is recyclable"}</Text>
-            <Icon
-              name="flash-on"
-              backgroundColor="rgba(52, 52, 52, 0.0)"
-              size={80}
-            >
-            </Icon>
+            //FIXME
+            <Image source={require("../images/vector.png")} style={{width: 50, height: 50}} />
             <View style={{alignItems: "stretch"}}>
               <Button color="#20d623" style={styles.modalButton} title="OK" onPress={this.firstModalFunction.bind(this)} />
 
