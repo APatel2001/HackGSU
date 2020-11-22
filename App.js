@@ -6,6 +6,7 @@ import {
   Text,
   Button,
   Alert,
+  Image,
 } from "react-native"
 import Camera from "./components/Camera";
 import { NavigationContainer } from '@react-navigation/native';
@@ -15,7 +16,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 function HomeScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
+      <Text style={style.text}>RecycleMate</Text>
+      <Image source={require('./images/logo.png')} style={style.image} />
+      <Text style={style.text2}>"A cleaner tomorrow"</Text>
       <Button
         title="Go to Camera"
         onPress={() => navigation.navigate('Camera')}
@@ -38,7 +41,11 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen name="Camera" component={CameraScreen} />
       </Stack.Navigator>
     </NavigationContainer>
@@ -50,8 +57,23 @@ const style = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "flex-end",
-  }
-  
+  },
+  image: {
+    marginBottom: 20,
+    marginTop: 75,
+    width: 300,
+    height: 300,
+  },
+  text: {
+    fontSize: 40,
+    fontWeight: "bold",
+  },
+  text2: {
+    fontSize: 30,
+    marginBottom: 100,
+    fontStyle: 'italic',
+    fontFamily: "times",
+  },  
 })
 
 
