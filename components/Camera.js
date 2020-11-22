@@ -4,13 +4,48 @@ import { RNCamera } from 'react-native-camera';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ImagePicker from "react-native-image-picker"
 
+const API_KEY = 'AIzaSyCy97f35oLhKxB-ecV08bdYLV-nY23VzWs';
+const API_URL = `https://vision.googleapis.com/v1/images:annotate?key=${API_KEY}`;
+
+async function callGoogleVisionAsync(image) {
+  const body = {
+    requests: [
+      {
+        image: {
+          content: image,
+        },
+        features: [
+          {
+            type: 'LABEL_DETECTION',
+            maxResults: 1,
+          },
+        ],
+      },
+    ],
+  };
+
+  const response = await fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+  const result = await response.json();
+  console.log('callGoogleVisionAsync -> result', result);
+
+  return result.responses[0].labelAnnotations[0].description;
+}
+
 class Camera extends PureComponent {
     
-
     constructor(props) {
       super(props);
       this.state = {
         flash: false,
+        image: null,
+        status: null,
       }
     }
 
@@ -36,8 +71,7 @@ class Camera extends PureComponent {
             console.log('User tapped custom button: ', response.customButton);
           } else {
             // console.log(response.data)
-            this.props.passed(response.data)
-            
+            //this.props.passed(response.uri)
           }
             }
         )
@@ -107,9 +141,15 @@ class Camera extends PureComponent {
     if (this.camera) {
       const options = { quality: 0.5, base64: true };
       const data = await this.camera.takePictureAsync(options);
-      // console.log(data.base64);
-      this.props.passed(data.base64);
-
+      this.setState({ image:  data.uri})
+      this.setState({ status: 'Loading....' })
+      try {
+        const result = await callGoogleVisionAsync(data.base64);
+        console.log(result);
+        this.setState({ status: result });
+      } catch (error) {
+        this.setState({ status: "Failed" })
+      }
     }
   };
 }
