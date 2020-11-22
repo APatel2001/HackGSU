@@ -13,16 +13,18 @@ import Camera from "./components/Camera";
 
 const App = () => {
 
-  const [picture, setPicture] = useState("");
+  var [picture, setPicture] = useState("");
 
   const pictureHandler = (image64) => {
-    setPicture(() => {picture = image64})
+    setPicture(() => {picture: image64})
   }
   
   useEffect(() => {
     // monitors for change in the picture state
     return () => {
+
       Alert.alert(
+        
         "Picture",
         "Picture Taken",
         [
@@ -42,7 +44,7 @@ const App = () => {
     <View style={style.container}>
       
       <Camera passed={pictureHandler}></Camera>
-
+      {console.log(picture)}
       
     </View>
   )

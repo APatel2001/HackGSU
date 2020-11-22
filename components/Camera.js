@@ -6,10 +6,13 @@ import ImagePicker from "react-native-image-picker"
 
 class Camera extends PureComponent {
     
-    pictureHandler = () => {
-        this.props.passed();
-    }
 
+    constructor(props) {
+      super(props);
+      this.state = {
+        flash: false,
+      }
+    }
 
     options = {
         title: 'Select Picture',
@@ -22,6 +25,7 @@ class Camera extends PureComponent {
         base64: true
     };
     
+    // TODO pickImage
     pickImage = () => {
         ImagePicker.launchImageLibrary(this.options, (response) => {
           if (response.didCancel) {
@@ -31,20 +35,17 @@ class Camera extends PureComponent {
           } else if (response.customButton) {
             console.log('User tapped custom button: ', response.customButton);
           } else {
-            console.log(response.data)
-            this.pictureHandler(response.data)
+            // console.log(response.data)
+            this.props.passed(response.data)
+            
           }
             }
         )
     }
-
-    state = {
-        flash: false,
-    }
-
-
     
   render() {
+
+
     return (
       <View style={styles.container}>
         <RNCamera
@@ -62,11 +63,11 @@ class Camera extends PureComponent {
           }}
 
         />
-        <View style={{ flexDirection: 'row', justifyContent: "space-evenly" }}>
+        <View style={{ flexDirection: 'row', justifyContent: "space-evenly", backgroundColor: 'rgba(52, 52, 52, 0.0)' }}>
 
             <Icon.Button
                 name="image"
-                backgroundColor = ""
+                backgroundColor= "rgba(52, 52, 52, 0.0)"
                 onPress={this.pickImage.bind(this)}
                 size={40}
             >
@@ -74,7 +75,7 @@ class Camera extends PureComponent {
           
             <Icon.Button
                 name="camera"
-                backgroundColor=""
+                backgroundColor="rgba(52, 52, 52, 0.0)"
                 onPress={this.takePicture.bind(this)}
                 size={40}
             > 
@@ -83,7 +84,7 @@ class Camera extends PureComponent {
             
             <Icon.Button
                 name={this.state.flash ? "flash-on" : "flash-off"}
-                backgroundColor = ""
+                backgroundColor = "rgba(52, 52, 52, 0.0)"
                 onPress={this.checkFlash.bind(this)}
                 size={40}
             >
@@ -101,12 +102,13 @@ class Camera extends PureComponent {
     })
   }
 
+  //TODO takePicture
   takePicture = async () => {
     if (this.camera) {
       const options = { quality: 0.5, base64: true };
       const data = await this.camera.takePictureAsync(options);
-      console.log(data.base64);
-      this.pictureHandler(data.base64)
+      // console.log(data.base64);
+      this.props.passed(data.base64);
 
     }
   };
@@ -116,7 +118,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'black',
+    backgroundColor: 'rgba(52, 52, 52, 1.0)'
   },
   preview: {
     flex: 1,
