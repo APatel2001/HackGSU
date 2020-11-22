@@ -65,6 +65,47 @@ class Camera extends PureComponent {
         }
       })
     }
+
+    
+
+
+    secondModalFunction = () => {
+      this.setState((prevState) => {
+        return {
+          ...prevState,
+          secondModal: !prevState.secondModal
+        }
+      })
+      console.log(this.state.secondModal)
+    }
+
+
+    thirdModalFunction = () => {
+      this.setState((prevState) => {
+        return {
+          ...prevState,
+          thirdModal: !prevState.thirdModal
+        }
+      })
+    }
+
+    okOneFunction = () => {
+      this.firstModalFunction.bind(this)
+      this.secondModalFunction()
+      console.log(this.state.secondModal)
+    }
+
+    okTwoFunction = () => {
+      this.secondModalFunction.bind(this)
+      this.thirdModalFunction()
+    }
+
+    okThreeFunction = () => {
+      this.thirdModalFunction.bind(this)
+    }
+
+
+
     
     options = {
         title: 'Select Picture',
@@ -106,8 +147,6 @@ class Camera extends PureComponent {
     }
     
   render() {
-
-
     return (
 
 
@@ -118,8 +157,31 @@ class Camera extends PureComponent {
             <Text style={styles.textModal}>{this.state.status + " " + "is recyclable"}</Text>
             <Image source={require('../images/vector.png')} style={{width: 100, height: 100}} resizeMode="contain"/>
             <View style={{alignItems: "stretch"}}>
-              <Button color="#20d623" style={styles.modalButton} title="OK" onPress={this.firstModalFunction.bind(this)} />
+              <Button color="#20d623" style={styles.modalButton} title="OK" onPress={this.okOneFunction} />
+            </View>
+          </View>
+        </Modal>
 
+
+
+        <Modal visible={this.state.secondModal}>
+          <View style={styles.modalView}>
+            <Text style={styles.textModal}>{this.state.status + " " + "is recyclable"}</Text>
+            <Image source={require('../images/vector.png')} style={{width: 100, height: 100}} resizeMode="contain"/>
+            <View style={{alignItems: "stretch"}}>
+              <Button color="#20d623" style={styles.modalButton} title="OK" onPress={this.okTwoFunction} />
+            </View>
+          </View>
+        </Modal>
+
+
+
+        <Modal visible={this.state.firstModal}>
+          <View style={styles.modalView}>
+            <Text style={styles.textModal}>{this.state.status + " " + "is recyclable"}</Text>
+            <Image source={require('../images/vector.png')} style={{width: 100, height: 100}} resizeMode="contain"/>
+            <View style={{alignItems: "stretch"}}>
+              <Button color="#20d623" style={styles.modalButton} title="OK" onPress={this.firstModalFunction.bind(this)} />
             </View>
           </View>
         </Modal>
@@ -231,7 +293,7 @@ const styles = StyleSheet.create({
   },
 
   modalButton: {
-    alignSelf: "stretch"
+    alignSelf: "stretch",
   },
 
   textModal: {
