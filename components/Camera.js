@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
-import { AppRegistry, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Modal, { ModalContent } from 'react-native-modals';
+import { AppRegistry, StyleSheet, Text, TouchableOpacity, View, Button, Image} from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ImagePicker from "react-native-image-picker"
-
 const API_KEY = 'AIzaSyCy97f35oLhKxB-ecV08bdYLV-nY23VzWs';
 const API_URL = `https://vision.googleapis.com/v1/images:annotate?key=${API_KEY}`;
 
@@ -38,6 +38,7 @@ async function callGoogleVisionAsync(image) {
   return result.responses[0].labelAnnotations[0].description;
 }
 
+
 class Camera extends PureComponent {
     
     constructor(props) {
@@ -46,9 +47,71 @@ class Camera extends PureComponent {
         flash: false,
         image: null,
         status: null,
+        firstModal: false,
+        secondModal: false,
+        thirdModal: false,
+        recyclable: false,
+        object: {
+          firstData: false,
+        }
+      }
+      
+      this.checkerFunction.bind(this)
+      this.firstModalFunction.bind(this)
+      this.secondModalFunction.bind(this)
+      this.thirdModalFunction.bind(this)
+    }
+
+    // TODO Modal main function
+
+    firstModalFunction = () => {
+      this.setState((prevState) => {
+        return {
+          ...prevState,
+          firstModal: !prevState.firstModal
+        }
+      })
+    }
+
+    secondModalFunction = () => {
+      this.setState((prevState) => {
+        return {
+          ...prevState,
+          secondModal: !prevState.secondModal
+        }
+      })
+    }
+    
+
+    thirdModalFunction = () => {
+      this.setState((prevState) => {
+        return {
+          ...prevState,
+          thirdModal: !prevState.thirdModal
+        }
+      })
+    }
+    
+
+    checkerFunction = (key) => {
+      if (key in this.state.object) {
+        const bool = this.state.object[key]
+        this.setState((prevState) => {
+          return {
+            ...prevState,
+            recyclable: bool
+          }
+        })
+        this.firstModalFunction()
+
+        
+      } else {
+        this.secondModalFunction();
       }
     }
 
+
+    
     options = {
         title: 'Select Picture',
         customButtons: [{ name: 'Image', title: 'Pick an image:' }],
@@ -76,7 +139,10 @@ class Camera extends PureComponent {
               try {
                 const result = await callGoogleVisionAsync(image);
                 console.log(result);
+                this.firstModalFunction();
                 this.setState({ status: result });
+                this.checkerFunction(this.state.status)
+
               } catch (error) {
                 this.setState({ status: "Failed" })
               }
@@ -88,10 +154,81 @@ class Camera extends PureComponent {
     }
     
   render() {
-
-
     return (
+
+
       <View style={styles.container}>
+
+        <Modal visible={this.state.firstModal}>
+          <View style={styles.modalView}>
+            <Text style={styles.textModal}>{this.state.status + " " + "is recyclable"}</Text>
+            <Image source={require('../images/vector.png')} style={{width: 100, height: 100}} resizeMode="contain"/>
+            <View style={{alignItems: "stretch"}}>
+              <Button color="#20d623" style={styles.modalButton} title="OK" onPress={this.firstModalFunction} />
+            </View>
+          </View>
+        </Modal>
+
+
+
+        <Modal visible={this.state.secondModal}>
+          <View style={styles.modalView}>
+            <Text style={styles.textModal}>{this.state.status + " is not in dataset"}</Text>      
+            <Image source={require('../images/vector.png')} style={{width: 100, height: 100}} resizeMode="contain"/>
+            <Text>Would you like to enter the data?</Text>
+            <View style={{flexDirection: "row", justifyContent: "center", alignItems: "stretch"}}>
+              <Button color="#20d623" style={styles.modalButton} title="YES" onPress={() => {
+                this.setState((prevState) => {
+                  return {
+                    ...prevState,
+                    secondModal: false,
+                    thirdModal: true
+                  }
+                })
+              }} />
+              <Button color="#20d623" style={styles.modalButton} title="NO" onPress={this.secondModalFunction} />
+            </View>
+          </View>
+        </Modal>
+
+
+
+        <Modal visible={this.state.thirdModal}>
+          <View style={styles.modalView}>
+            <Text style={styles.textModal}>{"Is " + this.state.status + " recyclable?"}</Text>
+            <Image source={require('../images/vector.png')} style={{width: 100, height: 100}} resizeMode="contain"/>
+            <View style={{flexDirection: "row", justifyContent: "center", alignItems: "stretch"}}>
+              <Button color="#20d623" style={styles.modalButton} title="YES" onPress={() => {
+                const stateOne = this.state.status
+                this.setState((prevState) => {
+                  return {
+                    ...prevState,
+                    thirdModal: false,
+                    object: {
+                      ...prevState.object,
+                      [stateOne] : true
+                    }
+                  }
+                })
+              }} />
+              <Button color="#20d623" style={styles.modalButton} title="NO" onPress={() => {
+                const stateOne = this.state.status
+                this.setState((prevState) => {
+                  return {
+                    ...prevState,
+                    thirdModal: false,
+                    object: {
+                      ...prevState.object,
+                      [stateOne] : false
+                    }
+                  }
+                })
+              }} />
+            </View>
+            </View>
+        </Modal> 
+
+
         <RNCamera
           ref={ref => {
             this.camera = ref;
@@ -157,6 +294,8 @@ class Camera extends PureComponent {
         const result = await callGoogleVisionAsync(data.base64);
         console.log(result);
         this.setState({ status: result });
+        // this.firstModalFunction();
+        this.checkerFunction(this.state.status)
       } catch (error) {
         this.setState({ status: "Failed" })
       }
@@ -184,6 +323,28 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     margin: 20,
   },
+
+
+  modalView: {
+    flex: 0,
+    flexDirection: 'column',
+    justifyContent: "space-between",
+    alignContent: "center",
+    alignItems: "center",
+    width: 200,
+    height: 250,
+  },
+
+  modalButton: {
+    alignSelf: "stretch",
+  },
+
+  textModal: {
+    fontSize: 15,
+    marginTop: 20
+  }
 });
+
+
 
 export default Camera
