@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import Modal, { ModalContent } from 'react-native-modals';
-import { AppRegistry, StyleSheet, Text, TouchableOpacity, View, Button} from 'react-native';
+import { AppRegistry, StyleSheet, Text, TouchableOpacity, View, Button, Image} from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ImagePicker from "react-native-image-picker"
@@ -116,8 +116,7 @@ class Camera extends PureComponent {
         <Modal visible={this.state.firstModal}>
           <View style={styles.modalView}>
             <Text style={styles.textModal}>{this.state.status + " " + "is recyclable"}</Text>
-            //FIXME
-            <Image source={require('../images/vector.png')} style={{width: 50, height: 50}} />
+            <Image source={require('../images/vector.png')} style={{width: 100, height: 100}} resizeMode="contain"/>
             <View style={{alignItems: "stretch"}}>
               <Button color="#20d623" style={styles.modalButton} title="OK" onPress={this.firstModalFunction.bind(this)} />
 
