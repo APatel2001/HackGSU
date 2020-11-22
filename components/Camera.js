@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
-import { AppRegistry, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Modal, { ModalContent } from 'react-native-modals';
+import { AppRegistry, StyleSheet, Text, TouchableOpacity, View, Button} from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ImagePicker from "react-native-image-picker"
-
 const API_KEY = 'AIzaSyCy97f35oLhKxB-ecV08bdYLV-nY23VzWs';
 const API_URL = `https://vision.googleapis.com/v1/images:annotate?key=${API_KEY}`;
 
@@ -38,6 +38,7 @@ async function callGoogleVisionAsync(image) {
   return result.responses[0].labelAnnotations[0].description;
 }
 
+
 class Camera extends PureComponent {
     
     constructor(props) {
@@ -46,9 +47,25 @@ class Camera extends PureComponent {
         flash: false,
         image: null,
         status: null,
+        firstModal: false,
+        secondModal: false,
+        thirdModal: false,
       }
+
+      
     }
 
+    // TODO Modal main function
+
+    firstModalFunction = () => {
+      this.setState((prevState) => {
+        return {
+          ...prevState,
+          firstModal: !prevState.firstModal
+        }
+      })
+    }
+    
     options = {
         title: 'Select Picture',
         customButtons: [{ name: 'Image', title: 'Pick an image:' }],
@@ -76,6 +93,7 @@ class Camera extends PureComponent {
               try {
                 const result = await callGoogleVisionAsync(image);
                 console.log(result);
+                this.firstModalFunction();
                 this.setState({ status: result });
               } catch (error) {
                 this.setState({ status: "Failed" })
@@ -91,7 +109,24 @@ class Camera extends PureComponent {
 
 
     return (
+
+
       <View style={styles.container}>
+
+        <Modal visible={this.state.firstModal}>
+          <View style={styles.modalView}>
+            <Text>{this.state.status + " " + "is recyclable"}</Text>
+            <Icon
+              name="recycle"
+              backgroundColor="rgba(52, 52, 52, 0.0)"
+              size={40}
+            >
+            </Icon>
+            <Button title="Hide modal" onPress={this.firstModalFunction.bind(this)} />
+          </View>
+        </Modal>
+
+
         <RNCamera
           ref={ref => {
             this.camera = ref;
@@ -157,6 +192,7 @@ class Camera extends PureComponent {
         const result = await callGoogleVisionAsync(data.base64);
         console.log(result);
         this.setState({ status: result });
+        this.firstModalFunction();
       } catch (error) {
         this.setState({ status: "Failed" })
       }
@@ -184,6 +220,28 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     margin: 20,
   },
+
+
+  modalView: {
+    flex: 0,
+    flexDirection: 'column',
+    justifyContent: "space-between",
+    alignContent: "center",
+    alignItems: "center",
+    width: 200,
+    height: 250,
+  },
+
+  modalButton: {
+    fontSize: 35,
+  },
+
+  textModal: {
+    fontSize: 35,
+    marginTop: 20
+  }
 });
+
+
 
 export default Camera
