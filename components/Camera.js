@@ -161,7 +161,7 @@ class Camera extends PureComponent {
 
         <Modal visible={this.state.firstModal}>
           <View style={styles.modalView}>
-            <Text style={styles.textModal}>{this.state.status + " " + "is recyclable"}</Text>
+            <Text style={styles.textModal}>{this.state.status + " " + (this.state.object[this.state.status] ? "recyclable" : "not recyclable")}</Text>
             <Image source={require('../images/vector.png')} style={{width: 100, height: 100}} resizeMode="contain"/>
             <View style={{alignItems: "stretch"}}>
               <Button color="#20d623" style={styles.modalButton} title="OK" onPress={this.firstModalFunction} />
