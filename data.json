@@ -1,0 +1,44 @@
+{
+    "Banana family": {
+        "Recyclable": true
+    },
+    "Fruit": {
+        "Recyclable": true
+    },
+    "Food": {
+        "Recyclable": true
+    },
+    "Red": {
+        "Recyclable": true
+    },
+    "Plastic": {
+        "Recyclable": true
+    },
+    "Floor": {
+        "Recyclable": true
+    },
+    "Drink": {
+        "Recyclable": true
+    },
+    "Bottle": {
+        "Recyclable": true
+    },
+    "Aluminium foil": {
+        "Recyclable": true
+    },
+    "Plastic bag": {
+        "Recyclable": true
+    },
+    "Technology": {
+        "Recyclable": true
+    },
+    "Cookware and bakeware": {
+        "Recyclable": true
+    },
+    "Product": {
+        "Recyclable": true
+    },
+    "Cardboard": {
+        "Recyclable": true
+    }
+}
