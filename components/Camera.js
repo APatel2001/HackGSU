@@ -161,9 +161,9 @@ class Camera extends PureComponent {
 
         <Modal visible={this.state.firstModal}>
           <View style={styles.modalView}>
-            <Text style={styles.textModal}>{this.state.status + " " + (this.state.object[this.state.status] ? "recyclable" : "not recyclable")}</Text>
+            <Text style={styles.textModal}>{this.state.status + " " + (this.state.object[this.state.status] ? "is recyclable" : "is not recyclable")}</Text>
             <Image source={require('../images/vector.png')} style={{width: 100, height: 100}} resizeMode="contain"/>
-            <View style={{alignItems: "stretch"}}>
+            <View style={{marginLeft: 0, marginRight: 0, flexDirection: "row", justifyContent: "center", alignItems: "stretch"}}>
               <Button color="#20d623" style={styles.modalButton} title="OK" onPress={this.firstModalFunction} />
             </View>
           </View>
@@ -175,8 +175,8 @@ class Camera extends PureComponent {
           <View style={styles.modalView}>
             <Text style={styles.textModal}>{this.state.status + " is not in dataset"}</Text>      
             <Image source={require('../images/vector.png')} style={{width: 100, height: 100}} resizeMode="contain"/>
-            <Text>Would you like to enter the data?</Text>
-            <View style={{flexDirection: "row", justifyContent: "center", alignItems: "stretch"}}>
+            <Text>Would you like to input this data in the dataset?</Text>
+            <View style={{marginLeft: 0, marginRight: 0, flexDirection: "row", justifyContent: "center", alignItems: "stretch"}}>
               <Button color="#20d623" style={styles.modalButton} title="YES" onPress={() => {
                 this.setState((prevState) => {
                   return {
@@ -195,9 +195,9 @@ class Camera extends PureComponent {
 
         <Modal visible={this.state.thirdModal}>
           <View style={styles.modalView}>
-            <Text style={styles.textModal}>{"Is " + this.state.status + " recyclable?"}</Text>
+            <Text style={styles.textModal}>{"Is " + (this.state.status) + " recyclable?"}</Text>
             <Image source={require('../images/vector.png')} style={{width: 100, height: 100}} resizeMode="contain"/>
-            <View style={{flexDirection: "row", justifyContent: "center", alignItems: "stretch"}}>
+            <View style={{marginLeft: 0, marginRight: 0, flexDirection: "row", justifyContent: "center", alignItems: "stretch"}}>
               <Button color="#20d623" style={styles.modalButton} title="YES" onPress={() => {
                 const stateOne = this.state.status
                 this.setState((prevState) => {
@@ -333,6 +333,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: 200,
     height: 250,
+    marginLeft: 5,
+    marginRight: 5,
+    marginTop: 5,
   },
 
   modalButton: {
