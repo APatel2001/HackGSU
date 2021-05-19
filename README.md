@@ -1,3 +1,5 @@
+#RecycleMate
+
 ## Inspiration
 Too often did we find ourselves not knowing whether an item was recyclable. Whether it was of inaccessibility, mislabeling, or pure laziness, our team has experienced ourselves and others simply guessing where an item should go. This sparked our idea to leverage the digital innovations in image capture to clear the doubts and progressively educate others of recyclable materials, thus contributing to a greener future.
 
